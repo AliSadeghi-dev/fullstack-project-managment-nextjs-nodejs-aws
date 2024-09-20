@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useAppSelector } from "@/app/redux";
 import Header from "@/components/Header";
 import { useGetTasksQuery } from "@/state/api";
@@ -56,13 +55,13 @@ const columns: GridColDef[] = [
     field: "author",
     headerName: "Autor",
     width: 150,
-    renderCell: (params) => params.value.username || "Unknown",
+    renderCell: (params) => params.value?.username || "Unknown",
   },
   {
     field: "assignee",
     headerName: "Assignee",
     width: 150,
-    renderCell: (params) => params.value.username || "Unassingee",
+    renderCell: (params) => params.value?.username || "Unassingee",
   },
 ];
 
@@ -81,7 +80,18 @@ const TableView = ({ id, setIsModalNewTaskOpen }: Props) => {
   return (
     <div className="h-[540px] w-full px-4 pb-8 xl:px-6">
       <div className="pt-5">
-        <Header name="Table" isSmallText />
+        <Header
+          name="Table"
+          isSmallText
+          buttonComponent={
+            <button
+              className="flex items-center rounded bg-blue-primary px-2 py-2 text-white hover:bg-blue-600"
+              onClick={() => setIsModalNewTaskOpen(true)}
+            >
+              Add Task
+            </button>
+          }
+        />
       </div>
       <DataGrid
         rows={tasks || []}
