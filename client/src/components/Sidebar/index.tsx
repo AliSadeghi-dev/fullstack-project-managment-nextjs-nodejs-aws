@@ -3,6 +3,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
+import { useGetProjectsQuery } from "@/state/api";
 import {
   AlertCircle,
   AlertOctagon,
@@ -29,13 +30,15 @@ import React, { useState } from "react";
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
+
+  const { data: projects } = useGetProjectsQuery();
+
   const dispatch = useAppDispatch();
 
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
 
-  // اصلاح کلاس‌ها برای انیمیشن روان
   const sidebarClassNames = `fixed flex flex-col h-full justify-between shadow-xl transition-all duration-300 z-40 dark:bg-black bg-white overflow-hidden ${
     isSidebarCollapsed ? "w-0" : "w-64"
   }`;
@@ -79,7 +82,6 @@ const Sidebar = () => {
           <SidebarLink icon={Users} label="Teams" href="/teams" />
         </nav>
 
-        {/* Projects List */}
         <button
           onClick={() => setShowProjects((prev) => !prev)}
           className="flex w-full items-center justify-between px-8 py-3 text-gray-500"
@@ -91,6 +93,18 @@ const Sidebar = () => {
             <ChevronDown className="h-5 w-5" />
           )}
         </button>
+
+        {showProjects &&
+          projects?.map((project) => {
+            return (
+              <SidebarLink
+                key={project.id}
+                icon={Briefcase}
+                label={project.name}
+                href={`/projects/${project.id}`}
+              />
+            );
+          })}
 
         {/* Priority List */}
         <button
